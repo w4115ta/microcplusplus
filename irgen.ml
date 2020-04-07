@@ -49,6 +49,29 @@ let translate (globals, functions) =
   let printf_func : L.llvalue =
     L.declare_function "printf" printf_t the_module in
 
+  (* Declare struct Foo *)
+  
+  let struct_foo_t : L.lltype =
+    L.named_struct_type context "Foo" in
+
+  let _ =
+    L.struct_set_body struct_foo_t
+    [| i32_t |] false in
+  
+  let struct_foo = L.declare_global struct_foo_t "Foo" the_module in
+
+  (* Declare each C function *)
+
+  let makeFoo_t : L.lltype = L.function_type (L.pointer_type struct_foo_t)
+	[| i32_t |] in
+  
+  let makeFoo : L.llvalue = L.declare_function "makeFoo" makeFoo_t the_module in
+
+  let incFoo_t : L.lltype = L.function_type (L.void_type context)
+    [| L.pointer_type struct_foo_t |] in
+
+  let incFoo : L.llvalue = L.declare_function "incFoo" incFoo_t the_module in
+
   (* Define each function (arguments and return type) so we can
      call it even before we've created its body *)
   let function_decls : (L.llvalue * sfunc_def) StringMap.t =
