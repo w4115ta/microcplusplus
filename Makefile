@@ -2,14 +2,14 @@ CC=gcc
 CLFAGS= -g -Wall
 LDFLAGS= -g
 
-default: microc.native foo.a
+default: microc.native libfoo.a
 
 microc.native: microc.ml scanner.mll microcparse.mly irgen.ml semant.ml ast.ml sast.ml
 	ocamlbuild -use-ocamlfind microc.native -pkgs unix,llvm,llvm.analysis
 
-foo.a: foo.o
-	ar -crs foo.a foo.o
-	ranlib foo.a
+libfoo.a: foo.o
+	ar -crs libfoo.a foo.o
+	ranlib libfoo.a
 
 foo.o: foo.h foo.c
 
