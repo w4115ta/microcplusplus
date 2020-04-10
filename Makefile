@@ -1,5 +1,5 @@
 CC=gcc
-CLFAGS= -g -Wall
+CFLAGS= -g -Wall
 LDFLAGS= -g
 
 default: microc.native libfoo.a

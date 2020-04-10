@@ -101,7 +101,7 @@ let translate (globals, functions) =
       and add_local m (t, n) =
         let local_var = L.build_alloca (ltype_of_typ t) n builder
         in let _ = if t = A.Foo then 
-			(L.build_call initFoo [| local_var |] "" builder ;
+			(ignore (L.build_call initFoo [| local_var |] "" builder );
 			L.build_call incFoo [| local_var |] "" builder)
 		else local_var 
         in StringMap.add n local_var m
