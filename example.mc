@@ -13,6 +13,7 @@ int gcd(int a, int b) {
 int main() {
   int x;
   int y;
+  foo z;
   a = 18;
   b = 9;
   x = 2;

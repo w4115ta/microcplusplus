@@ -31,10 +31,20 @@ let translate (globals, functions) =
   and i8_t       = L.i8_type     context
   and i1_t       = L.i1_type     context in
 
+  (* Declare struct Foo *)
+  
+  let struct_foo_t : L.lltype =
+    L.named_struct_type context "Foo" in
+
+  let _ =
+    L.struct_set_body struct_foo_t
+    [| i32_t |] false in
+  
   (* Return the LLVM type for a MicroC type *)
   let ltype_of_typ = function
       A.Int   -> i32_t
     | A.Bool  -> i1_t
+    | A.Foo  -> struct_foo_t
   in
 
   (* Create a map of global variables after creating each *)
@@ -49,28 +59,14 @@ let translate (globals, functions) =
   let printf_func : L.llvalue =
     L.declare_function "printf" printf_t the_module in
 
-  (* Declare struct Foo *)
-  
-  let struct_foo_t : L.lltype =
-    L.named_struct_type context "Foo" in
-
-  let _ =
-    L.struct_set_body struct_foo_t
-    [| i32_t |] false in
-  
-  let struct_foo = L.declare_global struct_foo_t "Foo" the_module in
-
   (* Declare each C function *)
-
-  let makeFoo_t : L.lltype = L.function_type (L.pointer_type struct_foo_t)
-	[| i32_t |] in
-  
-  let makeFoo : L.llvalue = L.declare_function "makeFoo" makeFoo_t the_module in
 
   let incFoo_t : L.lltype = L.function_type (L.void_type context)
     [| L.pointer_type struct_foo_t |] in
 
   let incFoo : L.llvalue = L.declare_function "incFoo" incFoo_t the_module in
+  
+  let initFoo : L.llvalue = L.declare_function "initFoo" incFoo_t the_module in
 
   (* Define each function (arguments and return type) so we can
      call it even before we've created its body *)
@@ -104,6 +100,10 @@ let translate (globals, functions) =
        * resulting registers to our map *)
       and add_local m (t, n) =
         let local_var = L.build_alloca (ltype_of_typ t) n builder
+        in let _ = if t = A.Foo then 
+			(L.build_call initFoo [| local_var |] "" builder ;
+			L.build_call incFoo [| local_var |] "" builder)
+		else local_var 
         in StringMap.add n local_var m
       in
 

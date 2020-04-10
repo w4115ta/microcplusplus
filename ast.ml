@@ -1,8 +1,8 @@
 (* Abstract Syntax Tree and functions for printing it *)
 
-type op = Add | Sub | Equal | Neq | Less | And | Or
+type op = Add | Sub | Equal | Neq | Less | And | Or 
 
-type typ = Int | Bool
+type typ = Int | Bool | Foo
 
 type expr =
     Literal of int
@@ -68,6 +68,7 @@ let rec string_of_stmt = function
 let string_of_typ = function
     Int -> "int"
   | Bool -> "bool"
+  | Foo -> "foo"
 
 let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ ";\n"
 

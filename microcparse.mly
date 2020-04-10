@@ -6,7 +6,7 @@ open Ast
 
 %token SEMI LPAREN RPAREN LBRACE RBRACE PLUS MINUS ASSIGN
 %token EQ NEQ LT AND OR
-%token IF ELSE WHILE INT BOOL
+%token IF ELSE WHILE INT BOOL FOO
 /* return, COMMA token */
 %token RETURN COMMA
 %token <int> LITERAL
@@ -46,6 +46,7 @@ vdecl:
 typ:
     INT   { Int   }
   | BOOL  { Bool  }
+  | FOO   { Foo   }
 
 /* fdecl */
 fdecl:
