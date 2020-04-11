@@ -5,7 +5,7 @@ LDFLAGS= -g
 default: microc.native libfoo.a
 
 microc.native: microc.ml scanner.mll microcparse.mly irgen.ml semant.ml ast.ml sast.ml
-	ocamlbuild -use-ocamlfind microc.native -pkgs unix,llvm,llvm.analysis
+	ocamlbuild -use-ocamlfind microc.native -pkgs llvm
 
 libfoo.a: foo.o
 	ar -crs libfoo.a foo.o
